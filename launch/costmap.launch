@@ -1,0 +1,11 @@
+<launch>
+
+  <!-- Start publishing the map->odom transform -->
+  <node name="pub_map_odom" pkg="motion_planning" type="pub_map_odometry" />
+  
+  <!-- Run the costmap node -->
+  <node name="costmap_node" pkg="costmap_2d" type="costmap_2d_node" >
+    <rosparam file="$(find motion_planning)/launch/costmap_param/costmap_params.yaml" command="load" />
+  </node>
+
+</launch>
