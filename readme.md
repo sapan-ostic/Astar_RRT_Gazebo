@@ -1,4 +1,4 @@
-# Path planning for Turtlebot2 in Gazebo using A* and RRT  
+# Path planning for Turtlebot2 in Gazebo using A* and RRT in unknown environment 
 
 ## Prerequisites
 The ROS package has been tested on Ubuntu 16.04LTS.Following are the dependencies.  
