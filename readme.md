@@ -5,7 +5,7 @@ The ROS package has been tested on Ubuntu 16.04LTS.Following are the dependencie
 1. Ros Kinetic: http://wiki.ros.org/kinetic/Installation
 2. Turtlebot simulation packages
 ```
-sudo apt-get install ros-kinetic-turtlebot-gazebo ros-kinetic-turtlebot-apps ros-kinetic-turtlebot-rviz-launchers
+sudo apt-get install ros-kinetic-turtlebot ros-kinetic-turtlebot-simulator ros-kinetic-turtlebot-apps
 ```
 3. Hokuyu Lidar Sensor: http://wiki.ros.org/turtlebot/Tutorials/indigo/Adding%20a%20lidar%20to%20the%20turtlebot%20using%20hector_models%20%28Hokuyo%20UTM-30LX%29
 ```
