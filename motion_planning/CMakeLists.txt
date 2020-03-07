@@ -28,12 +28,12 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(random_walker src/random_walker.cpp)
+add_executable(main src/main.cpp)
 add_executable(pub_map_odom_tf src/main_pub_map_odom.cpp)
 add_executable(sensing src/sensing.cpp)
 add_executable(talker src/talker.cpp)
 
-target_link_libraries(random_walker ${catkin_LIBRARIES})
+target_link_libraries(main ${catkin_LIBRARIES})
 target_link_libraries(pub_map_odom_tf ${catkin_LIBRARIES})
 target_link_libraries(sensing ${catkin_LIBRARIES})
 target_link_libraries(talker ${catkin_LIBRARIES})

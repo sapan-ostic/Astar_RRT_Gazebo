@@ -3,6 +3,8 @@
 #include "ros/ros.h"
 #include "std_msgs/Float32.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "nav_msgs/Odometry.h"
+#include <stack>  
 
 using namespace std;
 
@@ -26,11 +28,19 @@ class Sensing{
     };
 
     vector<vector<sNode>> nodes; // initializing map to represent all nodes
+    stack < pair<float,float> > path; // store path top: current node, bottom: goal node
+
+    // Controller variables
+    pair<int, int> state; // Current State
+    pair<int, int> prev_state; // Previous State
 
     Sensing(ros::NodeHandle &nh);  // constructor
     void costmapCb(const nav_msgs::OccupancyGridConstPtr grid); // Callback for costmap
     bool solve_astar();
     void printPath();
+    void getPath();
+    void PIDController();
+    void RobotState();
 
   private:
     void make_connections();      // add neighbors to the nodes 
@@ -191,6 +201,33 @@ void Sensing::printPath(){
   cout << endl;
 }
 
+void Sensing::getPath(){
+
+  sNode *nodeStart = &nodes[10][10];
+  sNode *nodeEnd = &nodes[15][15];
+  sNode *p = nodeEnd;
+  
+  while (p->parent != nullptr)
+  {
+    path.push(make_pair(p->x,p->y)); 
+    // Set next node to this node's parent
+    p = p->parent;
+  }
+
+}
+
+void Sensing::RobotStateCbk(nav_msgs::Odometry::ConstPtr &msg){
+  
+  state.first  = msg->pose.position.x;
+  state.second = msg->pose.position.y;
+
+}
+
+void Sensing::PIDController(){
+
+
+}
+
 void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){ 
   
   grid_resolution = grid->info.resolution;   
@@ -213,9 +250,11 @@ void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){
     }//j
   } //i 
 
+
   // cout << nodes[1][1].x << endl;
   solve_astar();
   printPath();
+
 }
 
 int main(int argc, char **argv){

@@ -157,7 +157,7 @@
       <light name='sun'>
         <pose frame=''>0 0 10 0 -0 0</pose>
       </light>
-      <light name='user_directional_light_0'>
+      <!-- <light name='user_directional_light_0'>
         <pose frame=''>-9.50202 0.956116 1 0 -0 0</pose>
       </light>
       <light name='user_directional_light_1'>
@@ -171,7 +171,7 @@
       </light>
       <light name='user_directional_light_4'>
         <pose frame=''>-9.50999 0.938219 1 0 -0 0</pose>
-      </light>
+      </light> -->
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
