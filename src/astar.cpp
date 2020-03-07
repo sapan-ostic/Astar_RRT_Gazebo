@@ -166,7 +166,8 @@ protected:
 			listNotTestedNodes.sort([](const sNode* lhs, const sNode* rhs){ return lhs->fGlobalGoal < rhs->fGlobalGoal; } );
 			
 			// Front of listNotTestedNodes is potentially the lowest distance node. Our
-			// list may also contain nodes that have been visited, so ditch these...
+			// list may also contain nodes that have been visited, so remove them
+			
 			while(!listNotTestedNodes.empty() && listNotTestedNodes.front()->bVisited)
 				listNotTestedNodes.pop_front();
 
