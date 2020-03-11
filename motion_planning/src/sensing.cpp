@@ -39,8 +39,8 @@ class Sensing{
     bool solve_astar();
     void printPath();
     void getPath();
-    void PIDController();
-    void RobotState();
+    // void PIDController();
+    // void RobotState();
 
   private:
     void make_connections();      // add neighbors to the nodes 
@@ -216,17 +216,17 @@ void Sensing::getPath(){
 
 }
 
-void Sensing::RobotStateCbk(nav_msgs::Odometry::ConstPtr &msg){
+// void Sensing::RobotStateCbk(nav_msgs::Odometry::ConstPtr msg){
   
-  state.first  = msg->pose.position.x;
-  state.second = msg->pose.position.y;
+//   state.first  = msg->pose.position.x;
+//   state.second = msg->pose.position.y;
 
-}
+// }
 
-void Sensing::PIDController(){
+// void Sensing::PIDController(){
 
 
-}
+// }
 
 void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){ 
   
