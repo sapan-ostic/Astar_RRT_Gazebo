@@ -1,8 +1,6 @@
-# Turtlebot Random walker with obstacle avoidance
+# Real-time navigation using A* in unknown cluttered environment
 
-![astar](/results/astar.gif)
-
-The Turtlebot moves forward until an obstacle is detected in its vicinity. When the obstacle is detected, the robot rotates until it finds a free path and once found, it moves forward again.
+![](/robot_planning/results/astar.gif)
 
 ## Prerequisites
 The following software packages need to be installed before preceeding with this demo. The setup is installed on Ubuntu 16.04. 
@@ -23,47 +21,24 @@ sudo apt-get install ros-kinetic-urg-node
 ## Running the code
 Download the repository and build it.
 '''
-cd ~/catkin_ws
-catkin_make
-source devel/setup.bash
-cd src/
-git clone 
+cd ~/catkin_ws/src/ 
+git clone https://github.com/sapan-ostic/Astar_RRT_Gazebo.git
 cd ..
 catkin_make
+source devel/setup.bash
 '''
 
 Tip: Include source ~/catkin_ws/devel/setup.bash in the ~/.bashrc file to run it everytime a new terminal is created.
 
 ## Running the simulation
-To simulate the turtlebot in Gazebo:
+To simulate the turtlebot in Gazebo, run following launch commands in different terminals:
 
 ```
-cd ~/catkin_ws
-roslaunch turtlebot_random_walker walker.launch
+roslaunch robot_planning simulation.launch
+
+roslaunch robot_planning planner.launch
+
+roslaunch robot_planning controller.launch
 ```
+
 Press ctrl+c to quit the simulation.
-
-## To record your own rosbag
-To log data on topics, launch the code with `runRosbag:=true`
-```
-roslaunch turtlebot_random_walker walkler.launch runRosbag:=true
-```
-Check the `bags` folder for a ROSbag file called walker.bag. This file has a record of all topics from the simulated turtlebot.
-
-## Observing topics in the ROS bag
-To run the rosbag file:
-```
-cd ~/catkin_ws/src/turtlebot_random_walker/bags
-rosbag play walker.bag
-```
-
-To view the topics that have been recorded, run the rosbag first:
-```
-rostopic list
-```
-
-or
-```
-cd ~/catkin_ws/src/turtlebot_random_walker/results
-rosbag info walker.bag
-```
