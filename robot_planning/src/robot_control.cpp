@@ -20,6 +20,7 @@ class Controller{
     robot_planning::trajData planned_path;
     
     robot_planning::state targetState;
+    robot_planning::state goalState;
     robot_planning::state currentState;
     robot_planning::state prevState;
 
@@ -34,8 +35,10 @@ class Controller{
     float kd_ang = 0.0;
     float ki_ang = 0.0;
 
-    float TARGET_EPS = 0.5;
+    float GOAL_EPS = 0.1;
+    float SAMPLING_RADIUS = 0.5;
     float MAX_VEL = 0.05;
+    bool TERMINATE = false;
 
     float prev_err_linear = 0;
     float d_err_linear = 0;
@@ -54,6 +57,7 @@ class Controller{
     void RobotStateCbk(nav_msgs::Odometry::ConstPtr msg); // Callback for odom
     void RobotPathCbk(robot_planning::trajData::ConstPtr msg);
     float distance();
+    float goaldistance();
     void PIDController();
     void publishVel();
 };
@@ -72,7 +76,9 @@ Controller::Controller(ros::NodeHandle &nh){ //constructor
     nh.getParam("robot_control/ki_ang", ki_ang);
     nh.getParam("robot_control/goalX", targetState.x);
     nh.getParam("robot_control/goalY", targetState.y);
-    nh.getParam("robot_control/MAX_VEL", MAX_VEL);   
+    nh.getParam("robot_control/MAX_VEL", MAX_VEL); 
+    nh.getParam("robot_control/SAMPLING_RADIUS", SAMPLING_RADIUS); 
+    nh.getParam("robot_control/GOAL_EPS", GOAL_EPS);   
   }
 
   else
@@ -102,20 +108,26 @@ float Controller::distance(){
   return dist;  
 }
 
+float Controller::goaldistance(){
+  float dist;
+  dist = sqrt(pow(goalState.x - currentState.x,2) + pow(goalState.y - currentState.y,2));
+  
+  return dist;  
+}
+
 void Controller::RobotPathCbk(robot_planning::trajData::ConstPtr msg){
   
   planned_path.data = msg->data;
   targetState = (planned_path.data)[0];
-  
-  if(distance() < TARGET_EPS)
-    targetState = (planned_path.data)[1];
+  goalState = (planned_path.data).back();
 
   cout << "targetState.x: "<< targetState.x << " targetState.y: "<< targetState.y << endl;
-
+  if (goaldistance() < GOAL_EPS)
+    TERMINATE = true;
 }
 
 void Controller::PIDController(){
-  for (int temp = 0; distance() < TARGET_EPS; temp++)
+  for (int temp = 0; distance() < SAMPLING_RADIUS && temp < planned_path.data.size(); temp++)
     targetState = (planned_path.data)[temp];
   
   desired_heading = atan2(-currentState.y + targetState.y, -currentState.x + targetState.x); 
@@ -185,7 +197,9 @@ int main(int argc, char **argv){
   ros::Subscriber subs_path = n.subscribe("/planned_path", 1, &Controller::RobotPathCbk, &robot_control);
   ros::Rate loop_rate(100); // Control Frequency
 
-  while(ros::ok()){
+  while(ros::ok() and !robot_control.TERMINATE){
+
+    // cout << robot_control.TERMINATE << endl;
     
     robot_control.publishVel();
     ros::spinOnce();

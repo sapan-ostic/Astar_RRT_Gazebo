@@ -103,10 +103,10 @@ void Sensing::get_start_end_nodes(){
   nodeStart = &nodes[start_node_i][start_node_j];
   nodeEnd = &nodes[goal_node_i][goal_node_j];
 
-  cout<<"start=> x: " << current[0] << " y: " << current[1] << endl;
-  cout<<"start=> i: " << start_node_i << " j: " << start_node_j << endl;
-  cout<<"goal => x: " << goal[0] << " y: " << goal[1] << endl;
-  cout<<"goal => i: " << goal_node_i << " j: " << goal_node_j << endl;
+  // cout<<"start=> x: " << current[0] << " y: " << current[1] << endl;
+  // cout<<"start=> i: " << start_node_i << " j: " << start_node_j << endl;
+  // cout<<"goal => x: " << goal[0] << " y: " << goal[1] << endl;
+  // cout<<"goal => i: " << goal_node_i << " j: " << goal_node_j << endl;
 }
 
 void Sensing::make_connections(){
@@ -243,24 +243,27 @@ bool Sensing::solve_astar(){
 
 
 void Sensing::printPath(){
-  sNode *p = nodeEnd;
 
   cout << "-----------------------------------" << endl;
-  while (p->parent != nullptr)
+  for (auto state:path_msg.data)
   {
-    cout << " x: " << p->x << " y: " << p->y; 
+    cout << " x: " << state.x << " y: " << state.y; 
     // Set next node to this node's parent
-    p = p->parent;
+    // p = p->parent;
   }
   cout << endl;
   cout << "-----------------------------------" << endl;
 }
 
 void Sensing::getPath(){
-  sNode *p = nodeEnd;
-  cout << p->parent << endl;
+  sNode *p = nodeEnd->parent;
+  // cout << p->parent << endl;
   robot_planning::state state_msg;
   path_msg.data.clear();
+
+  state_msg.x = goal[0];
+  state_msg.y = goal[1];
+  path_msg.data.insert(path_msg.data.begin(), state_msg);
 
   while (p->parent != nullptr)
   { 
