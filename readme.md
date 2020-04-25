@@ -1,4 +1,4 @@
-# Real-time navigation using D*(Dynamic A*) in unknown cluttered environment
+# Real-time navigation using D* in unknown cluttered environment
 
 ![](/robot_planning/results/astar.gif)
 
