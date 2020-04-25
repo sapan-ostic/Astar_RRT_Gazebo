@@ -6,7 +6,7 @@ costmap:
     robot_base_frame: /base_footprint
     static_map: true
     rolling_window: false
-    resolution: 0.5
+    resolution: 0.1
     update_frequency: 20
     publish_frequency: 20
     width: 14
@@ -24,7 +24,7 @@ costmap:
 
     inflation_layer:
       enabled: true
-      inflation_radius: 0.1
+      inflation_radius: 0.5
     
     obstacle_layer:
       enabled: true

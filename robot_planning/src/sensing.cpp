@@ -103,10 +103,10 @@ void Sensing::get_start_end_nodes(){
   nodeStart = &nodes[start_node_i][start_node_j];
   nodeEnd = &nodes[goal_node_i][goal_node_j];
 
-  // cout<<"start=> x: " << current[0] << " y: " << current[1] << endl;
-  // cout<<"start=> i: " << start_node_i << " j: " << start_node_j << endl;
-  // cout<<"goal => x: " << goal[0] << " y: " << goal[1] << endl;
-  // cout<<"goal => i: " << goal_node_i << " j: " << goal_node_j << endl;
+  cout<<"start=> x: " << current[0] << " y: " << current[1] << endl;
+  cout<<"start=> i: " << start_node_i << " j: " << start_node_j << endl;
+  cout<<"goal => x: " << goal[0] << " y: " << goal[1] << endl;
+  cout<<"goal => i: " << goal_node_i << " j: " << goal_node_j << endl;
 }
 
 void Sensing::make_connections(){
@@ -225,9 +225,19 @@ bool Sensing::solve_astar(){
           // and search along the next best path.
           nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + heuristic(nodeNeighbour, nodeEnd);
         }
-      } 
+      }
+
+
     }
-    // cout << nodeEnd->parent << endl;
+    if(nodeCurrent == nodeEnd){
+      ROS_INFO("Found path to Goal");
+      return true;
+    }
+    else if(listNotTestedNodes.empty()){
+      ROS_ERROR("List Got Empty");
+      return false;
+    }
+    cout << nodeEnd->parent << endl;
     return true;
 }
 
@@ -248,7 +258,7 @@ void Sensing::printPath(){
 
 void Sensing::getPath(){
   sNode *p = nodeEnd;
-  // cout << nodeEnd->parent << endl;
+  cout << p->parent << endl;
   robot_planning::state state_msg;
   path_msg.data.clear();
 
@@ -274,6 +284,8 @@ void Sensing::publishPath(){
     printPath();
     pub_path.publish(path_msg);
   }
+  else
+    ROS_ERROR("Path not found !! ");
 }
 
 
@@ -302,14 +314,21 @@ void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){
       nodes[i][j].y = map_y + j*grid_resolution + grid_resolution/2;
 
       // Updating obstacle information
-      if ((int) map[grid_size*j+i] == 100){ // 100 = obstacle
+      if ((int) map[grid_size*j+i] > 5){ // 100 = obstacle
         nodes[i][j].bObstacle = true;
-      }   
+      }
+      else
+        nodes[i][j].bObstacle = false;    
     }//j
   } //i 
 
-  solve_astar();
-  getPath();
+  bool GotPath = solve_astar();
+  if (GotPath){
+    ROS_INFO("Got Path !!");
+    getPath();
+  }  
+  else
+    ROS_ERROR("Astar failed !!");
   // printPath();
 
 }

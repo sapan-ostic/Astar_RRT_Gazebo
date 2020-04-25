@@ -34,7 +34,7 @@ class Controller{
     float kd_ang = 0.0;
     float ki_ang = 0.0;
 
-    float TARGET_EPS = 0.05;
+    float TARGET_EPS = 0.5;
     float MAX_VEL = 0.05;
 
     float prev_err_linear = 0;
@@ -115,6 +115,8 @@ void Controller::RobotPathCbk(robot_planning::trajData::ConstPtr msg){
 }
 
 void Controller::PIDController(){
+  for (int temp = 0; distance() < TARGET_EPS; temp++)
+    targetState = (planned_path.data)[temp];
   
   desired_heading = atan2(-currentState.y + targetState.y, -currentState.x + targetState.x); 
   // cout << "heading: " << heading << " desired_heading: " << desired_heading << endl;
@@ -147,12 +149,13 @@ void Controller::PIDController(){
   linear_vel = kp_lin * err_linear + kd_lin * d_err_linear + ki_lin*int_err_linear;
   angular_vel = kp_ang * err_angular + kd_ang * d_err_angular + ki_ang*int_err_angular;
   
-  // cout << "err_linear: " << err_linear << " err_angular: "<< err_angular << endl;
+  cout << "err_linear: " << err_linear << " err_angular: "<< err_angular << endl;
 
   linear_vel = max(min(linear_vel,  MAX_VEL) ,-MAX_VEL);
   
   prev_err_linear = err_linear;
   prev_err_angular = err_angular;
+
 
 }
 
