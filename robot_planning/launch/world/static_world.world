@@ -24,10 +24,10 @@
       <real_time_update_rate>100</real_time_update_rate>
     </physics>
     <state world_name='default'>
-      <sim_time>281 590000000</sim_time>
-      <real_time>48 511164649</real_time>
-      <wall_time>1580691246 25560911</wall_time>
-      <iterations>4501</iterations>
+      <sim_time>327 570000000</sim_time>
+      <real_time>53 469029374</real_time>
+      <wall_time>1587835005 934675939</wall_time>
+      <iterations>4598</iterations>
       <model name='Untitled'>
         <pose frame=''>-1.24573 2.33291 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -111,44 +111,44 @@
         </link>
       </model>
       <model name='husky'>
-        <pose frame=''>-1.6877 4.65322 0.141787 -1.9e-05 2.8e-05 0.019051</pose>
+        <pose frame=''>-1.65077 4.64215 0.142428 -2.5e-05 0.001397 -0.006209</pose>
         <scale>1 1 1</scale>
         <link name='back_left_wheel'>
-          <pose frame=''>-1.94909 4.93375 0.176794 -0.000291 0.532159 0.018956</pose>
-          <velocity>0.000485 -0.001631 -0.096986 0.006577 0.003614 -0.00115</velocity>
-          <acceleration>-0.004026 -0.012195 -9.78125 -0.191725 0.008751 0.112146</acceleration>
-          <wrench>-0.010611 -0.032143 -25.7804 0 -0 0</wrench>
+          <pose frame=''>-1.90494 4.92917 0.177779 -0.001022 0.794576 -0.006729</pose>
+          <velocity>-0.018642 0.000149 -3e-06 -0.000549 -0.103899 -0.002799</velocity>
+          <acceleration>-2.01228 0.018536 0.00137 -0.096677 1.2454 0.020117</acceleration>
+          <wrench>-5.30377 0.048856 0.00361 0 -0 0</wrench>
         </link>
         <link name='back_right_wheel'>
-          <pose frame=''>-1.93822 4.3629 0.176793 -0.000256 -0.234649 0.019101</pose>
-          <velocity>0.00064 -0.001637 -0.097022 0.006532 0.003376 0.000404</velocity>
-          <acceleration>0.002675 -0.007337 -9.82031 -0.221862 0.010245 -0.035885</acceleration>
-          <wrench>0.007051 -0.019338 -25.8834 0 -0 0</wrench>
+          <pose frame=''>-1.90848 4.35832 0.177792 0.000824 -0.078313 -0.006247</pose>
+          <velocity>-0.020297 0.000133 -1.9e-05 -0.001064 -0.115161 -0.003119</velocity>
+          <acceleration>-2.02073 0.018525 -0.00177 -0.105172 1.19024 -0.040729</acceleration>
+          <wrench>-5.32605 0.048827 -0.004666 0 -0 0</wrench>
         </link>
         <link name='base_link'>
-          <pose frame=''>-1.6877 4.65322 0.141787 -1.9e-05 2.8e-05 0.019051</pose>
-          <velocity>0.000502 -0.002047 -0.097257 0.000673 0.000938 0.000158</velocity>
-          <acceleration>0.000253 0.006105 -9.79977 0.018453 -0.000728 0.011418</acceleration>
-          <wrench>0.008564 0.206694 -331.771 0 -0 0</wrench>
+          <pose frame=''>-1.65077 4.64215 0.142428 -2.5e-05 0.001397 -0.006209</pose>
+          <velocity>-0.024187 -0.000544 -0.034252 0.000743 0.133881 -0.00286</velocity>
+          <acceleration>0.720969 0.007408 -2.29604 0.016004 0.908403 -0.00111</acceleration>
+          <wrench>24.4084 0.250792 -77.7323 0 -0 0</wrench>
         </link>
         <link name='front_left_wheel'>
-          <pose frame=''>-1.43719 4.94352 0.17678 -9.5e-05 0.693223 0.019004</pose>
-          <velocity>0.000478 -0.002008 -0.097484 0.002158 0.004101 -0.000185</velocity>
-          <acceleration>-0.00597 -0.034298 -9.78779 -0.669314 0.033252 0.441804</acceleration>
-          <wrench>-0.015735 -0.090398 -25.7977 0 -0 0</wrench>
+          <pose frame=''>-1.39295 4.92603 0.177068 -0.00023 1.10887 -0.006426</pose>
+          <velocity>-0.018673 -0.001096 -0.068724 0.001911 0.009211 -0.002581</velocity>
+          <acceleration>-2.01263 -0.013308 -6.90684 -0.242874 0.001529 0.157474</acceleration>
+          <wrench>-5.30469 -0.035075 -18.2044 0 -0 0</wrench>
         </link>
         <link name='front_right_wheel'>
-          <pose frame=''>-1.42631 4.37268 0.176778 -7.1e-05 -0.096797 0.019065</pose>
-          <velocity>0.000605 -0.002003 -0.097508 0.002071 0.003473 -2.7e-05</velocity>
-          <acceleration>0.004071 -0.024591 -9.81361 -0.768685 0.034974 -0.053147</acceleration>
-          <wrench>0.01073 -0.064815 -25.8657 0 -0 0</wrench>
+          <pose frame=''>-1.39649 4.35509 0.177071 -0.000125 0.214083 -0.006244</pose>
+          <velocity>-0.020347 -0.001166 -0.068371 0.00235 3.5e-05 -0.002634</velocity>
+          <acceleration>-2.01958 -0.005846 -6.89325 -0.377161 0.002328 0.042273</acceleration>
+          <wrench>-5.32301 -0.015409 -18.1685 0 -0 0</wrench>
         </link>
       </model>
       <model name='unit_cylinder'>
-        <pose frame=''>1.23229 -0.405568 0.499096 4.8e-05 4.8e-05 -1.3e-05</pose>
+        <pose frame=''>1.23227 -0.405544 0.499096 4.8e-05 4.8e-05 -1.9e-05</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose frame=''>1.23229 -0.405568 0.499096 4.8e-05 4.8e-05 -1.3e-05</pose>
+          <pose frame=''>1.23227 -0.405544 0.499096 4.8e-05 4.8e-05 -1.9e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
@@ -157,25 +157,10 @@
       <light name='sun'>
         <pose frame=''>0 0 10 0 -0 0</pose>
       </light>
-      <!-- <light name='user_directional_light_0'>
-        <pose frame=''>-9.50202 0.956116 1 0 -0 0</pose>
-      </light>
-      <light name='user_directional_light_1'>
-        <pose frame=''>-9.5041 0.983455 1 0 -0 0</pose>
-      </light>
-      <light name='user_directional_light_2'>
-        <pose frame=''>-9.51255 0.961869 1 0 -0 0</pose>
-      </light>
-      <light name='user_directional_light_3'>
-        <pose frame=''>-9.55321 0.938992 1 0 -0 0</pose>
-      </light>
-      <light name='user_directional_light_4'>
-        <pose frame=''>-9.50999 0.938219 1 0 -0 0</pose>
-      </light> -->
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>1.19217 -10.9196 8.71332 0 0.517797 1.63428</pose>
+        <pose frame=''>0.6109 -9.7947 10.7348 0 0.653797 1.59428</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
@@ -190,58 +175,6 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
-    <light name='user_directional_light_0' type='directional'>
-      <pose frame=''>-9.50202 0.956116 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
-    <light name='user_directional_light_1' type='directional'>
-      <pose frame=''>-9.5041 0.983455 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
-    <light name='user_directional_light_2' type='directional'>
-      <pose frame=''>-9.51255 0.961869 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
-    <light name='user_directional_light_3' type='directional'>
-      <pose frame=''>-9.55321 0.938992 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -289,19 +222,6 @@
       </link>
       <pose frame=''>3.63562 1.30612 0 0 -0 0</pose>
     </model>
-    <light name='user_directional_light_4' type='directional'>
-      <pose frame=''>-9.50999 0.938219 1 0 -0 0</pose>
-      <diffuse>0.5 0.5 0.5 1</diffuse>
-      <specular>0.1 0.1 0.1 1</specular>
-      <direction>0.1 0.1 -0.9</direction>
-      <attenuation>
-        <range>20</range>
-        <constant>0.5</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <cast_shadows>1</cast_shadows>
-    </light>
     <model name='arn_env1'>
       <link name='Wall_10'>
         <pose frame=''>-2.17783 -1.6685 -1 0 -0 0</pose>

@@ -74,17 +74,17 @@ Sensing::Sensing(ros::NodeHandle &nh){ //constructor
   if(nh.hasParam("costmap_node/costmap/width")){
     nh.getParam("costmap_node/costmap/width", grid_size);
     nh.getParam("costmap_node/costmap/resolution", grid_resolution);
-    nh.getParam("robot_info/grid_connections", grid_connections);
-    // nh.getParam("robot_info/start", start);
-    nh.getParam("robot_info/goal", goal);
+    nh.getParam("planner/grid_connections", grid_connections);
+    // nh.getParam("planner/start", start);
+    nh.getParam("planner/goal", goal);
   }  
   else
-    ROS_ERROR("Did not find parameters");
+    ROS_ERROR("Did not find parame");
 
   grid_size /= grid_resolution;
 
   nodes.resize(grid_size, vector<sNode>(grid_size));   // allocating memory to initialized vector 
-
+  // cout<<"goal => x: " << goal[0] << " y: " << goal[1] << endl;
   // Add neighbors
   // ROS_INFO("Connection");
   make_connections();
@@ -227,45 +227,53 @@ bool Sensing::solve_astar(){
         }
       } 
     }
-
+    // cout << nodeEnd->parent << endl;
     return true;
 }
 
 
 void Sensing::printPath(){
   sNode *p = nodeEnd;
-  
+
+  cout << "-----------------------------------" << endl;
   while (p->parent != nullptr)
   {
-    cout << "x: " << p->x << " y: " << p->y; 
+    cout << " x: " << p->x << " y: " << p->y; 
     // Set next node to this node's parent
     p = p->parent;
   }
   cout << endl;
+  cout << "-----------------------------------" << endl;
 }
 
 void Sensing::getPath(){
   sNode *p = nodeEnd;
-  
+  // cout << nodeEnd->parent << endl;
   robot_planning::state state_msg;
   path_msg.data.clear();
 
   while (p->parent != nullptr)
   { 
         
+    // ROS_INFO("Getting Path . . .");
     state_msg.x = p->x;
     state_msg.y = p->y;
+    
+    // cout << state_msg.y << endl;
 
-    path_msg.data.insert(path_msg.data.begin()  ,state_msg); 
+    path_msg.data.insert(path_msg.data.begin(), state_msg); 
     // Set next node to this node's parent
     p = p->parent;
   }
 
+  // cout << path_msg.data[0].x << endl;
 }
 
 void Sensing::publishPath(){
-  getPath();
-  pub_path.publish(path_msg);
+  if (!(path_msg.data).empty()){
+    printPath();
+    pub_path.publish(path_msg);
+  }
 }
 
 
@@ -301,6 +309,7 @@ void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){
   } //i 
 
   solve_astar();
+  getPath();
   // printPath();
 
 }
@@ -308,18 +317,22 @@ void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){
 int main(int argc, char **argv){
 
   ros::init(argc, argv, "listener");
-  ros::NodeHandle n;
+  ros::NodeHandle nh;
   
-  Sensing sensing(n);
+  Sensing sensing(nh);
 
-  ros::Subscriber sub_costmap = n.subscribe("/costmap_node/costmap/costmap", 1, &Sensing::costmapCb, &sensing);
-  ros::Subscriber subs_odom = n.subscribe("/odom", 1, &Sensing::odomCb, &sensing);
-  ros::Rate loop_rate(10);
+  ros::Subscriber sub_costmap = nh.subscribe("/costmap_node/costmap/costmap", 1, &Sensing::costmapCb, &sensing);
+  ros::Subscriber subs_odom = nh.subscribe("/odom", 1, &Sensing::odomCb, &sensing);
+
+  int PLANNING_FREQ = 10;
+  nh.getParam("planner/planning_freq", PLANNING_FREQ);
+
+  ros::Rate loop_rate(PLANNING_FREQ);
 
   while(ros::ok()){
 
-    // sensing.publishPath();
     ros::spinOnce();
+    sensing.publishPath();
     
     loop_rate.sleep();
   }

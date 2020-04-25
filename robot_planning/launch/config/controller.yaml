@@ -1,0 +1,15 @@
+# PID Control Parameters
+
+kp_lin: 0.2
+kd_lin: 0.01
+ki_lin: 0.0
+
+kp_ang: 0.5
+kd_ang: 0.01
+ki_ang: 0.0
+
+goalX: -3
+goalY: 0
+
+MAX_VEL: 0.2
+
