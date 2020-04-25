@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(motion_planning)
+project(robot_planning)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
@@ -15,12 +15,23 @@ find_package(catkin REQUIRED COMPONENTS
   roslib 
 )
 
+add_message_files(
+  FILES
+  trajData.msg
+  state.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+)
+
 add_compile_options(-std=c++11)
 
 catkin_package(
 	INCLUDE_DIRS include
 	LIBRARIES $(PROJECT_NAME)
-	CATKIN_DEPENDS nav_msgs roscpp
+	CATKIN_DEPENDS nav_msgs roscpp message_runtime
 )
 
 include_directories(
@@ -28,12 +39,15 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(main src/main.cpp)
+add_executable(robot_control src/robot_control.cpp)
 add_executable(pub_map_odom_tf src/main_pub_map_odom.cpp)
 add_executable(sensing src/sensing.cpp)
 add_executable(talker src/talker.cpp)
 
-target_link_libraries(main ${catkin_LIBRARIES})
+target_link_libraries(robot_control ${catkin_LIBRARIES})
 target_link_libraries(pub_map_odom_tf ${catkin_LIBRARIES})
 target_link_libraries(sensing ${catkin_LIBRARIES})
 target_link_libraries(talker ${catkin_LIBRARIES})
+
+add_dependencies(sensing ${catkin_EXPORTED_TARGETS})
+add_dependencies(robot_control ${catkin_EXPORTED_TARGETS})

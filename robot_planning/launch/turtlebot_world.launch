@@ -12,7 +12,7 @@
     <arg name="use_sim_time" value="true"/>
     <arg name="debug" value="false"/>
     <arg name="gui" value="$(arg gui)" />
-    <arg name="world_name" value="$(find motion_planning)/launch/world/static_world.world"/>
+    <arg name="world_name" value="$(find robot_planning)/launch/world/static_world.world"/>
     <!-- <arg name="world_name" value="$(arg world_file)"/> -->
   </include>
   

@@ -4,7 +4,13 @@
 #include "std_msgs/Float32.h"
 #include "nav_msgs/OccupancyGrid.h"
 #include "nav_msgs/Odometry.h"
-#include <stack>  
+#include "std_msgs/Header.h"
+#include "nav_msgs/MapMetaData.h"
+
+
+#include "robot_planning/trajData.h"
+#include "robot_planning/state.h"
+
 
 using namespace std;
 
@@ -12,8 +18,18 @@ class Sensing{
    
   public:
     double grid_resolution;
+    
     int grid_size;
+    int global_grid_size;
     int grid_connections;
+
+    std::vector<float> gframe; // origin of global frame wrt map frame
+    // std::vector<float> lframe;
+
+    nav_msgs::OccupancyGrid global_map;
+
+    std::vector<float> start;
+    std::vector<float> goal;
 
     struct sNode{
       bool bObstacle = false;       // Is the node an obstruction?
@@ -28,17 +44,26 @@ class Sensing{
     };
 
     vector<vector<sNode>> nodes; // initializing map to represent all nodes
-    stack < pair<float,float> > path; // store path top: current node, bottom: goal node
+    vector< pair<float,float> > path; // store path top: current node, bottom: goal node
 
-    // Controller variables
-    pair<int, int> state; // Current State
-    pair<int, int> prev_state; // Previous State
+    // Publisher and msg for the controller
+    ros::Publisher pub_path;
+    ros::Publisher pub_global_costmap;
+    nav_msgs::OccupancyGrid global_costmap;
+
+    robot_planning::trajData path_msg;
 
     Sensing(ros::NodeHandle &nh);  // constructor
     void costmapCb(const nav_msgs::OccupancyGridConstPtr grid); // Callback for costmap
+    void init_global_map();
     bool solve_astar();
     void printPath();
     void getPath();
+    void publishPath();
+    void publishGlobalMap();
+    void get_start_goal_nodes();
+
+
     // void PIDController();
     // void RobotState();
 
@@ -48,22 +73,88 @@ class Sensing{
 };
 
 Sensing::Sensing(ros::NodeHandle &nh){ //constructor
+  pub_path = nh.advertise<robot_planning::trajData>("planned_path", 1);
+  ros::Publisher pub_global_costmap = nh.advertise<nav_msgs::OccupancyGrid>("global_costmap",1);
 
   ROS_INFO("Sensing node initialized ...");
   if(nh.hasParam("costmap_node/costmap/width")){
     nh.getParam("costmap_node/costmap/width", grid_size);
     nh.getParam("costmap_node/costmap/resolution", grid_resolution);
     nh.getParam("robot_info/grid_connections", grid_connections);
+    nh.getParam("robot_info/start", start);
+    nh.getParam("robot_info/goal", goal);
+    nh.getParam("robot_info/global_origin", gframe);
   }  
   else
     ROS_ERROR("Did not find parameters");
 
   grid_size /= grid_resolution;
+  global_grid_size /= grid_resolution;
 
-  nodes.resize(grid_size, vector<sNode>(grid_size));   // allocating memory to initialized vector 
+  nodes.resize(global_grid_size, vector<sNode>(global_grid_size));   // allocating memory to initialized vector 
   
+  
+  init_global_map();
+
+
   // Add neighbors
-  make_connections();
+  // make_connections();
+
+  // get_start_goal_nodes();
+
+  //Global map
+
+
+  // std_msgs::Header header;
+  // header.frame_id = "map";
+
+  // nav_msgs::MapMetaData info;
+  // info.width = global_grid_size;
+  // info.height = global_grid_size;
+  // info.resolution = grid_resolution;
+  
+  // for (unsigned int i = 0; i < info.width; i++)
+  //   for (unsigned int j = 0; j < info.height; j++)
+  //     map.Insert(Cell(i , j, info.width, msg->data[x+ info.width * y]));
+
+  // global_map.info.origin.position.x = gframe[0];
+  // global_map.info.origin.position.y = gframe[1];
+  // global_map.info.origin.position.z = 0;
+  
+  // global_map.info.origin.orientation.x = 0;
+  // global_map.info.origin.orientation.y = 0;
+  // global_map.info.origin.orientation.z = 0;
+  // global_map.info.origin.orientation.w = 1;
+
+  // vector<int> temp_var(global_grid_size*global_grid_size, -1);
+  // global_map.data; 
+
+
+}
+
+void Sensing::init_global_map(){
+	global_costmap.info.resolution = global_grid_size;
+    global_costmap.info.origin.position.x = gframe[0];
+    global_costmap.info.origin.position.y = gframe[1];
+    global_costmap.info.width             = global_grid_size;
+    global_costmap.info.height            = global_grid_size;
+
+
+    size_t size = global_costmap.info.width * global_costmap.info.height;
+    global_costmap.data.reserve(size);
+    for(int i=0;i<size;i++)
+    {
+      global_costmap.data.push_back(-1);
+    }
+}
+
+void Sensing::get_start_goal_nodes(){
+  float xstart = start[0];
+  float ystart = start[1]; 
+  float xgoal = goal[0];
+  float ygoal = goal[1];
+
+  // start_i = floor(xstart/grid_resolution);
 }
 
 void Sensing::make_connections(){
@@ -207,53 +298,74 @@ void Sensing::getPath(){
   sNode *nodeEnd = &nodes[15][15];
   sNode *p = nodeEnd;
   
+  robot_planning::state state_msg;
+  path_msg.data.clear();
+
   while (p->parent != nullptr)
-  {
-    path.push(make_pair(p->x,p->y)); 
+  { 
+        
+    state_msg.x = p->x;
+    state_msg.y = p->y;
+
+    path_msg.data.insert(path_msg.data.begin()  ,state_msg); 
     // Set next node to this node's parent
     p = p->parent;
   }
 
 }
 
-// void Sensing::RobotStateCbk(nav_msgs::Odometry::ConstPtr msg){
-  
-//   state.first  = msg->pose.position.x;
-//   state.second = msg->pose.position.y;
+void Sensing::publishPath(){
+  getPath();
+  pub_path.publish(path_msg);
+}
 
-// }
-
-// void Sensing::PIDController(){
-
-
-// }
+void Sensing::publishGlobalMap(){
+  pub_global_costmap.publish(global_costmap);
+}
 
 void Sensing::costmapCb(const nav_msgs::OccupancyGridConstPtr grid){ 
   
   grid_resolution = grid->info.resolution;   
- 
+  
+  // local map location in odom frame (fixed)
   float map_x = grid->info.origin.position.x;
   float map_y = grid->info.origin.position.y; 
 
-  auto map =  grid->data; 
+  // local map location in global map (fixed)
+  float gl_x = map_x - gframe[0]; 
+  float gl_y = map_y - gframe[1];
+
+  auto local_map =  grid->data; 
   
+  // Define global nodes positions in terms of x and y
   for (int i {0}; i< grid_size; i++){
     for (int j {0}; j< grid_size; j++){      
     
-      nodes[i][j].x = map_x + i*grid_resolution; 
-      nodes[i][j].y = map_y + j*grid_resolution;
+      // nodes[i][j].x = gframe[0] + i*grid_resolution; 
+      // nodes[i][j].y = gframe[1] + j*grid_resolution;
+
+      // Converting local indices to global indices
+      int gi = i + int(gl_x/grid_resolution);
+      int gj = j + int(gl_y/grid_resolution);
+
+      nodes[gi][gj].x = gframe[0] + gi*grid_resolution; 
+      nodes[gi][gj].y = gframe[1] + gj*grid_resolution;
+
+      global_map.data[global_grid_size*gj+gi] = local_map[grid_size*j+i];
 
       // Updating obstacle information
-      if ((int) map[grid_size*j+i] == 100){ // 100 = obstacle
-        nodes[i][j].bObstacle = true;
+      if ((int) local_map[grid_size*j+i] == 100){ // 100 = obstacle
+        nodes[gi][gj].bObstacle = true;
       }   
     }//j
   } //i 
 
+  cout<< "map_x: " << map_x << endl;
+  cout<< "map_y: " << map_y << endl;
 
   // cout << nodes[1][1].x << endl;
-  solve_astar();
-  printPath();
+  // solve_astar();
+  // printPath();
 
 }
 
@@ -266,7 +378,16 @@ int main(int argc, char **argv){
 
   ros::Subscriber sub_costmap = n.subscribe("/costmap_node/costmap/costmap", 1, &Sensing::costmapCb, &sensing);
   
-  ros::spin();
-  
+  ros::Rate loop_rate(10);
+
+  while(ros::ok()){
+
+    // sensing.publishPath();
+    sensing.publishGlobalMap();
+    ros::spinOnce();
+    
+    loop_rate.sleep();
+  }
+
   return 0;
 }

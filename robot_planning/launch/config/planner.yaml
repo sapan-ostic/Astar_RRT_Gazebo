@@ -1,0 +1,11 @@
+id: 1
+
+# x, y, theta
+start: [0, 0, 0]
+goal:  [2, 6, 0]
+
+grid_connections: 4
+
+global_height: 12
+global_weight: 12
+

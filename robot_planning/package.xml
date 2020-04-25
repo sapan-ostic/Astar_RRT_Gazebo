@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>motion_planning</name>
+  <name>robot_planning</name>
   <version>0.0.0</version>
   <description>The motion planning package</description>
   <maintainer email="ssagrawal@wpi.edu">Sapan Agrawal</maintainer>
   <license>BSD</license>
   
+
+  <build_depend>message_generation</build_depend>
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>roscpp</build_depend>
@@ -27,7 +29,8 @@
   <build_export_depend>move_base_msgs</build_export_depend>
   <build_export_depend>map_msgs</build_export_depend>
   <build_export_depend>nav_msgs</build_export_depend>
-
+  
+  <exec_depend>message_runtime</exec_depend> 
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
