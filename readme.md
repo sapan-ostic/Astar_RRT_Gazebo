@@ -34,7 +34,7 @@ Tip: Include source ~/catkin_ws/devel/setup.bash in the ~/.bashrc file to run it
 To simulate the turtlebot in Gazebo, run following launch commands in different terminals:
 
 ```
-roslaunch robot_planning simulation.launch world=cluttered
+roslaunch robot_planning simulation.launch world:=cluttered
 ```
 Different worlds can be launched by changing the world argument.
 
