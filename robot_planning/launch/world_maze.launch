@@ -12,7 +12,7 @@
     <arg name="use_sim_time" value="true"/>
     <arg name="debug" value="false"/>
     <arg name="gui" value="$(arg gui)" />
-    <arg name="world_name" value="$(find robot_planning)/launch/world/static_world.world"/>
+    <arg name="world_name" value="$(find robot_planning)/launch/world/maze.world"/>
     <!-- <arg name="world_name" value="$(arg world_file)"/> -->
   </include>
   
@@ -20,6 +20,7 @@
     <arg name="base" value="$(arg base)"/>
     <arg name="stacks" value="$(arg stacks)"/>
     <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+    <arg name="ROBOT_INITIAL_POSE" value="-x 0 -y -3.5 -Y 0"/>
   </include>
   
   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">

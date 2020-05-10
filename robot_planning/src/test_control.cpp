@@ -15,14 +15,12 @@ using namespace std;
 class Controller{
    
   public:
-
-    // Controller variables
-    robot_planning::trajData planned_path;
-    
     robot_planning::state targetState;
     robot_planning::state goalState;
     robot_planning::state currentState;
     robot_planning::state prevState;
+
+    vector<float> goal {0,0};
 
     float desired_heading;
     float heading;
@@ -57,9 +55,7 @@ class Controller{
 
     Controller(ros::NodeHandle &nh);  // constructor
     void odomCbk(nav_msgs::Odometry::ConstPtr msg); // Callback for odom
-    void RobotPathCbk(robot_planning::trajData::ConstPtr msg);
-    float distance();
-    float goaldistance();
+      float distance();
     void PIDController();
     void publishVel();
 };
@@ -81,11 +77,17 @@ Controller::Controller(ros::NodeHandle &nh){ //constructor
     nh.getParam("robot_control/MAX_VEL", MAX_VEL); 
     nh.getParam("robot_control/SAMPLING_RADIUS", SAMPLING_RADIUS); 
     nh.getParam("robot_control/GOAL_EPS", GOAL_EPS);
+    nh.getParam("robot_control/test_goal", goal);
     nh.getParam("robot", robot);   
   }
 
   else
     ROS_ERROR("Did not find parameters");
+
+  targetState.x = goal[0];
+  targetState.y = goal[1];
+
+  cout<< "targetState.x: "<< targetState.x << "targetState.y: "<< targetState.y<< endl;
 
   if (robot=="turtlebot")
     pub_vel = nh.advertise<geometry_msgs::Twist>("/mobile_base/commands/velocity", 100);
@@ -115,36 +117,11 @@ float Controller::distance(){
   return dist;  
 }
 
-float Controller::goaldistance(){
-  float dist;
-  dist = sqrt(pow(goalState.x - currentState.x,2) + pow(goalState.y - currentState.y,2));
-  
-  return dist;  
-}
-
-void Controller::RobotPathCbk(robot_planning::trajData::ConstPtr msg){
-  
-  planned_path.data = msg->data;
-  targetState = (planned_path.data)[0];
-  goalState = (planned_path.data).back();
-
-  cout << "targetState.x: "<< targetState.x << " targetState.y: "<< targetState.y << endl;
-  if (goaldistance() < GOAL_EPS)
-    TERMINATE = true;
-}
-
 void Controller::PIDController(){
-  for (int temp = 0; distance() < SAMPLING_RADIUS && temp < planned_path.data.size(); temp++)
-    targetState = (planned_path.data)[temp];
+  if (distance() < GOAL_EPS)
+    TERMINATE = true;
   
   desired_heading = atan2(-currentState.y + targetState.y, -currentState.x + targetState.x); 
-  // cout << "heading: " << heading << " desired_heading: " << desired_heading << endl;
-  
-  // if (desired_heading > M_PI)
-  //   desired_heading -= 2*M_PI;
-  
-  // else if (desired_heading < -M_PI)
-  //   desired_heading += 2*M_PI;
 
   float err_linear = distance();
   d_err_linear = err_linear - prev_err_linear;
@@ -171,11 +148,9 @@ void Controller::PIDController(){
   cout << "err_linear: " << err_linear << " err_angular: "<< err_angular << endl;
 
   linear_vel = max(min(linear_vel,  MAX_VEL) ,-MAX_VEL);
-  cout << "linear_vel: " << linear_vel << " angular_vel: "<< angular_vel << endl;
+  // cout << "linear_vel: " << linear_vel << " angular_vel: "<< angular_vel << endl;
   prev_err_linear = err_linear;
   prev_err_angular = err_angular;
-
-
 }
 
 void Controller::publishVel(){
@@ -210,7 +185,6 @@ int main(int argc, char **argv){
   else if (robot=="husky")
     subs_odom = nh.subscribe("/odometry/filtered", 1, &Controller::odomCbk, &robot_control);
 
-  ros::Subscriber subs_path = nh.subscribe("/planned_path", 1, &Controller::RobotPathCbk, &robot_control);
   ros::Rate loop_rate(100); // Control Frequency
 
   while(ros::ok() and !robot_control.TERMINATE){

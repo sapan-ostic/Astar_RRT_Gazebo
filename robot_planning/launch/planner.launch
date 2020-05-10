@@ -3,7 +3,7 @@
 
   <rosparam file="$(find robot_planning)/launch/config/planner.yaml" command="load" ns="planner/" />
     
-	<node pkg="robot_planning" name="sensing" type="sensing" output="screen" />
+	<node pkg="robot_planning" name="planner" type="planner" output="screen" />
   
 </launch>
     

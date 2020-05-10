@@ -2,7 +2,10 @@ id: 1
 
 # x, y, theta
 start: [0, 0, 0]
-goal:  [1.5, 4.5]
+goal:  [-8, 8]
+
+# other goal location
+# playpen: (-8,8),(4,1)  
 
 grid_connections: 8
 planning_freq: 1 

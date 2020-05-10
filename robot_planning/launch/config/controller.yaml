@@ -1,6 +1,6 @@
 # PID Control Parameters
 
-kp_lin: 0.2
+kp_lin: 0.5
 kd_lin: 0.01
 ki_lin: 0.0
 
@@ -8,10 +8,10 @@ kp_ang: 0.5
 kd_ang: 0.01
 ki_ang: 0.0
 
-goalX: -3
-goalY: 0
+test_goal: [-3,-3]
 
 MAX_VEL: 0.3
+
 SAMPLING_RADIUS: 0.5
 GOAL_EPS: 0.5
 
